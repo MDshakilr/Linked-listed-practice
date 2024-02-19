@@ -1,4 +1,5 @@
-/*Task 2:
+/*
+Task 2:
 Extend your linked list operations. Implement functions to insert a node after a specific value
 or at a given position and to delete nodes with a given value or at a given position.
 
@@ -15,193 +16,92 @@ using namespace std;
 struct Node
 {
     int data;
-    Node* next;
+    Node *next;
 };
-Node* createNode(int value)
-{
-    Node* newNode = new Node;
-    if (newNode != nullptr)
-    {
-        newNode->data = value;
-        newNode->next = nullptr;
-    }
-    return newNode;
-}
-Node* addBeginning(Node* head, int value)
-{
-    Node* newNode = createNode(value);
-    if (newNode != nullptr)
-    {
-        newNode->next = head;
-        head = newNode;
-    }
-    return head;
-}
-void addEnd(Node* head, int value)
-{
-    Node* newNode = createNode(value);
-    if (newNode != nullptr)
-    {
-        while (head->next != nullptr)
-        {
-            head = head->next;
-        }
-        head->next = newNode;
-    }
-}
-void insertAfterValue(Node* head, int targetValue, int valueToInsert)
-{
-    Node* current = head;
-    while (current != nullptr)
-    {
-        if (current->data == targetValue)
-        {
-            Node* newNode = createNode(valueToInsert);
-            if (newNode != nullptr)
-            {
-                newNode->next = current->next;
-                current->next = newNode;
-                break;
-            }
-        }
-        current = current->next;
-    }
-}
-void deleteNodeWithValue(Node*& head, int targetValue)
-{
-    Node* current = head;
-    Node* prev = nullptr;
 
-    while (current != nullptr)
-    {
-        if (current->data == targetValue)
-        {
-            if (prev == nullptr)
-            {
-                head = current->next;
-            }
-            else
-            {
-                prev->next = current->next;
-            }
-            delete current;
-            break;
-        }
-        prev = current;
-        current = current->next;
-    }
-}
-void insertPosition(Node*& head, int position, int valueToInsert)
+Node *head = nullptr;
+void firstNode(int data)
 {
-    if (position <= 0)
-    {
-        cout << "Invalid position.\n";
-        return;
-    }
-
-    Node* newNode = createNode(valueToInsert);
-    if (newNode != nullptr)
-    {
-        if (position == 1)
-        {
-            newNode->next = head;
-            head = newNode;
-        }
-        else
-        {
-            Node* current = head;
-            for (int i = 1; i < position - 1 && current != nullptr; ++i)
-            {
-                current = current->next;
-            }
-
-            if (current != nullptr)
-            {
-                newNode->next = current->next;
-                current->next = newNode;
-            }
-            else
-            {
-                cout << "Invalid position.\n";
-                delete newNode;
-            }
-        }
-    }
+    head = new Node;
+    head->data = data;
+    head->next = nullptr;
 }
-void deletePosition(Node*& head, int position)
+void addNode(int data)
 {
-    if (position <= 0)
+    Node *ptr;
+    ptr = head;
+    Node *temp = new Node;
+    temp->data = data;
+    temp->next = nullptr;
+    while (ptr->next != nullptr)
     {
-        cout << "Invalid position.\n";
-        return;
+        ptr = ptr->next;
     }
+    ptr->next = temp;
+}
 
-    if (position == 1)
+void addNodeposition(int position, int data)
+{
+    Node *ptr = head;
+    Node *temp = new Node;
+    temp->data = data;
+    temp->next = nullptr;
+    int i = 0;
+    while (i != position - 1)
     {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
+        ptr = ptr->next;
+        i++;
+    }
+    temp->next = ptr->next;
+    ptr->next = temp;
+}
+
+void deletePosition(int position)
+{
+    if (head->next == nullptr)
+    {
+        head = nullptr;
     }
     else
     {
-        Node* current = head;
-        Node* prev = nullptr;
-
-        for (int i = 1; i < position && current != nullptr; ++i)
+        Node *ptr = head;
+        int i = 0;
+        while (i != position - 1)
         {
-            prev = current;
-            current = current->next;
+            ptr = ptr->next;
+            i++;
         }
-
-        if (current != nullptr)
-        {
-            prev->next = current->next;
-            delete current;
-        }
-        else
-        {
-            cout << "Invalid position.\n";
-        }
+        ptr->next = ptr->next->next;
     }
 }
-void printList(Node* head)
+void printNode()
 {
-    while (head != nullptr)
+    Node *temp = head;
+    cout << "Linked List: ";
+    while (temp != nullptr)
     {
-        cout << head->data;
-        if (head->next != nullptr)
+        cout << temp->data;
+        if (temp->next != nullptr)
         {
-            cout << " -> ";
+            cout << "->";
         }
-        head = head->next;
-    }
-    cout << endl;
-}
-void deleteList(Node* head)
-{
-    Node* current = head;
-    while (current != nullptr)
-    {
-        Node* nextNode = current->next;
-        delete current;
-        current = nextNode;
+        temp = temp->next;
     }
 }
 
 int main()
 {
-    Node* head = nullptr;
-    head = addBeginning(head, 5);
-    addEnd(head, 10);
-    addEnd(head, 15);
-    insertAfterValue(head, 10, 25);
-    deleteNodeWithValue(head, 10);
-    insertPosition(head, 2, 20);
-    deletePosition(head, 3);
-    cout << "Linked List: ";
-    printList(head);
+    firstNode(5);
+    addNode(10);
+    addNode(15);
+    printNode();
+    cout<<endl;
+    addNodeposition(2, 25);
+    deletePosition(1);
+    addNodeposition(2, 20);
+    deletePosition(3);
+    printNode();
 
-    deleteList(head);
 
     return 0;
 }
